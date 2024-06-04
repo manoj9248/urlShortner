@@ -1,6 +1,7 @@
 package endpoints
 
 import (
+	"errors"
 	"net/http"
 
 	svc "URLSHORTNER/services"
@@ -35,6 +36,9 @@ func (h *Handler) Shortenurl(c *gin.Context) {
 	if err := c.BindJSON(&url); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
+	}
+	if url.Url == "" {
+		c.AbortWithError(http.StatusBadRequest, errors.New("URL should be valid"))
 	}
 	resp, _ := h.Service.GetShorternURL(url.Url)
 	c.JSON(http.StatusOK, &resp)
