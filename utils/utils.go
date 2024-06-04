@@ -25,15 +25,15 @@ func GetDomain(inputUrl string) (string, error) {
 	return domain, nil
 }
 func GetHighestCountDomain(domainCount map[string]int) []DomainCountList {
-	var pairs []DomainCountList
+	var domainList []DomainCountList
 	for k, v := range domainCount {
-		pairs = append(pairs, DomainCountList{Key: k, Value: v})
+		domainList = append(domainList, DomainCountList{Key: k, Value: v})
 	}
-	sort.Slice(pairs, func(i, j int) bool {
-		return pairs[i].Value > pairs[j].Value
+	sort.Slice(domainList, func(i, j int) bool {
+		return domainList[i].Value > domainList[j].Value
 	})
-	if len(pairs) > 3 {
-		return pairs[:3]
+	if len(domainList) > 3 {
+		return domainList[:3]
 	}
-	return pairs
+	return domainList
 }
