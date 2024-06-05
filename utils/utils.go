@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/url"
 	"sort"
+	"strconv"
 )
 
 type DomainCountList struct {
@@ -16,6 +17,12 @@ type DomainCountList struct {
 // create the short url based on md5 hash and return the first 7 hash code
 func GetShortUrl(url string) string {
 	hash := md5.Sum([]byte(url))
+	return hex.EncodeToString(hash[:7])
+}
+
+// create the short url based on md5 hash with counter and return the first 7 hash code
+func GetShortUrlwithCounter(url string, count int) string {
+	hash := md5.Sum([]byte(url + strconv.Itoa(count)))
 	return hex.EncodeToString(hash[:7])
 }
 

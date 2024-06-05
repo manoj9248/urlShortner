@@ -45,6 +45,15 @@ func (s ShortenURLService) GetShorternURL(url string) (string, error) {
 	}
 	s.domainCount[domain]++
 	sUrl := utils.GetShortUrl(url)
+	if _, ok := s.shortUrlToUrl[sUrl]; ok {
+		// logic to avoid collision of short url
+		for i := 1; ; i++ {
+			sUrl = utils.GetShortUrlwithCounter(url, i)
+			if _, ok := s.shortUrlToUrl[url]; !ok {
+				break
+			}
+		}
+	}
 	s.urlToShortUrl[url] = sUrl
 	s.shortUrlToUrl[sUrl] = url
 	ShortenURL := s.urlToShortUrl[url]
