@@ -22,10 +22,11 @@ func TestGetShorternURL(t *testing.T) {
 }
 func TestGetUrl(t *testing.T) {
 	svcObj := helper()
-	resp := svcObj.GetURL("452785")
+	resp, _ := svcObj.GetURL("452785")
 	require.Equal(t, resp, "https://github.com/manoj")
-	resp = svcObj.GetURL("https://github.com/manoj1")
+	resp, exist := svcObj.GetURL("https://github.com/manoj1")
 	require.Equal(t, resp, "")
+	require.Equal(t, exist, false)
 }
 func helper() ShortenURLService {
 	urlToShortUrl := make(map[string]string)

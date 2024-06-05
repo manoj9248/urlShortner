@@ -35,7 +35,7 @@ func TestShouldShortenURL(t *testing.T) {
 	require.NotEmpty(t, rr.Body.String())
 }
 
-func TestShouldNotShortenURL(t *testing.T) {
+func TestInvalidShortenURL(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/v1/", strings.NewReader(`{"url": ""}`))
 	req.Header.Set("Content-Type", "application/json")
 	rr := httptest.NewRecorder()
@@ -54,19 +54,17 @@ func TestRedirectURL(t *testing.T) {
 	require.Equal(t, http.StatusOK, rr.Code)
 
 	urls := strings.Split(rr.Body.String(), "/")
-	input := urls[0]
-	input = input[1 : len(input)-1]
-	url := "/v1/" + input
+	url := "/v1/url/" + urls[len(urls)-1]
+	url = strings.Replace(url, "\"}", "", -1)
 	req, _ = http.NewRequest("GET", url, nil)
 	rr = httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	require.Equal(t, http.StatusOK, rr.Code)
-	require.Contains(t, rr.Body.String(), "manoj.com")
+	require.Equal(t, http.StatusFound, rr.Code)
 }
 
-func TestTopDomains(t *testing.T) {
-	req, _ := http.NewRequest("GET", "/v1/metrics", nil)
+func TestDomainCount(t *testing.T) {
+	req, _ := http.NewRequest("GET", "/v1/getmetrics", nil)
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
